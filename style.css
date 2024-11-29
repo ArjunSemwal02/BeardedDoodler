@@ -6,13 +6,21 @@ body{
    box-sizing: border-box; 
 }
 .grid{
-    height: 100vh;
+    position: relative;
+    height: 57rem;
     width: 45rem;
     background-color: rgb(242, 246, 10);
     justify-self: center;
 }
 .doodler{
+    position: absolute;
     height: 8rem;
     width: 6rem;
     background-color: red;
+}
+.platforms{
+    width: 9rem;
+    height: 1rem;
+    background-color: green;
+    position: absolute;
 }
