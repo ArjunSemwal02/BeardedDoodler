@@ -28,8 +28,20 @@ const movePlatforms = () => {
 }
 
 const jump = () => {
+    clearInterval(downTimerId)
     upTimerId = setInterval(() => {
         doodlerBottomSpace += .5
+        beardedDoodlerElement.style.bottom = doodlerBottomSpace + 'rem'
+        if(doodlerBottomSpace > 35)
+            fall()
+    }, 30)
+    
+}
+
+const fall = () => {
+    clearInterval(upTimerId)
+    downTimerId = setInterval(() => {
+        doodlerBottomSpace -= .5
         beardedDoodlerElement.style.bottom = doodlerBottomSpace + 'rem'
     }, 30)
 }
@@ -69,7 +81,7 @@ const createPlatforms = () => {
 
 
 
-//attach it to abutton
+//attach it to a button
 start()
 
 
