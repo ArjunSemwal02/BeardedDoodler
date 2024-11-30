@@ -1,10 +1,10 @@
 const gridElement = document.querySelector('.grid');
 const beardedDoodlerElement = document.createElement('div')
 
-let doodlerLeftSpace = 10
+let doodlerLeftSpace
 let doodlerBottomSpace = 5
 let isGameOver = false
-let platformCount = 5
+let platformCount = 6
 let platforms = []
 let upTimerId
 let downTimerId
@@ -12,6 +12,7 @@ let downTimerId
 const createDoodler = () => {
     beardedDoodlerElement.classList.add('doodler')
     gridElement.appendChild(beardedDoodlerElement)
+    doodlerLeftSpace = platforms[0].left
 
     beardedDoodlerElement.style.left = doodlerLeftSpace + 'rem'
     beardedDoodlerElement.style.bottom = doodlerBottomSpace + 'rem'
@@ -32,10 +33,9 @@ const jump = () => {
     upTimerId = setInterval(() => {
         doodlerBottomSpace += .5
         beardedDoodlerElement.style.bottom = doodlerBottomSpace + 'rem'
-        if(doodlerBottomSpace > 35)
+        if(doodlerBottomSpace > 20)
             fall()
     }, 30)
-    
 }
 
 const fall = () => {
@@ -43,22 +43,31 @@ const fall = () => {
     downTimerId = setInterval(() => {
         doodlerBottomSpace -= .5
         beardedDoodlerElement.style.bottom = doodlerBottomSpace + 'rem'
+        if(doodlerBottomSpace <= 0)
+            gameOver()
     }, 30)
+}
+
+function gameOver(){
+    console.log('Game is Over')
+    isGameOver = true
+    clearInterval(upTimerId)
+    clearInterval(downTimerId)
 }
 
 const start = () => {
     if(!isGameOver){
-        createDoodler()
         createPlatforms()
-        // setInterval(movePlatforms, 30)
-        // jump()
+        createDoodler()
+        setInterval(movePlatforms, 30)
+        jump()
     }
 }
 
 class Platform{
     constructor(newPlatformBottom){
         this.bottom = newPlatformBottom
-        this.left = Math.random() * 35
+        this.left = Math.random() * 36
         this.visual = document.createElement('div')
 
         const visual = this.visual
@@ -79,9 +88,5 @@ const createPlatforms = () => {
     }
 }
 
-
-
 //attach it to a button
 start()
-
-
