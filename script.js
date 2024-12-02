@@ -14,6 +14,7 @@ let isJumping = false
 let isGoingLeft = false
 let isGoingRight = false
 let isGameOver = false
+let score = 0
 
 class Platform{
     constructor(newPlatformBottom){
@@ -57,6 +58,7 @@ const movePlatforms = () => {
             if(platform.bottom < .8){
                 let firstPlatform = platforms[0].visual
                 firstPlatform.classList.remove('platforms')
+                score++
                 platforms.shift()
                 console.log(platforms)
                 let newPlatform = new Platform(57)
@@ -148,10 +150,23 @@ function moveStraight() {
 function gameOver(){
     console.log('Game is Over')
     isGameOver = true
+    while(gridElement.firstChild){
+        gridElement.removeChild(gridElement.firstChild)
+    }
+    displayScore()
     clearInterval(upTimerId)
     clearInterval(downTimerId)
     clearInterval(leftTimerId)
     clearInterval(rightTimerId)
+}
+
+const displayScore = () => {
+    const scoreElement = document.createElement('div')
+    scoreElement.innerHTML = `Score: ${score}`
+    scoreElement.style.fontSize = '4rem'
+    scoreElement.style.justifySelf = 'center'
+    scoreElement.style.color = 'darkred'
+    gridElement.appendChild(scoreElement)
 }
 
 const start = () => {
