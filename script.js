@@ -1,6 +1,20 @@
 const gridElement = document.querySelector('.grid');
 const beardedDoodlerElement = document.createElement('div')
 
+let doodlerLeftSpace
+let startPoint = 5
+let doodlerBottomSpace = startPoint
+let platforms = []
+let platformCount = 7
+let upTimerId
+let downTimerId
+let leftTimerId
+let rightTimerId
+let isJumping = false
+let isGoingLeft = false
+let isGoingRight = false
+let isGameOver = false
+
 class Platform{
     constructor(newPlatformBottom){
         this.bottom = newPlatformBottom
@@ -15,20 +29,6 @@ class Platform{
     }
 }
 
-let doodlerLeftSpace
-let startPoint = 5
-let doodlerBottomSpace = startPoint
-let isGameOver = false
-let platformCount = 7
-let platforms = []
-let upTimerId
-let downTimerId
-let isJumping = false
-let isGoingLeft = false
-let isGoingRight = false
-let leftTimerId
-let rightTimerId
-
 const createDoodler = () => {
     beardedDoodlerElement.classList.add('doodler')
     gridElement.appendChild(beardedDoodlerElement)
@@ -39,8 +39,8 @@ const createDoodler = () => {
 
 const createPlatforms = () => {
     for( let i = 0; i < platformCount; i++){
-       let platformGap = 70 / platformCount
-       let newPlatformBottom = 9 + i * platformGap
+       let platformGap = 57 / platformCount
+       let newPlatformBottom = 10 + i * platformGap
        let newPlaform = new Platform(newPlatformBottom)
        platforms.push(newPlaform)
        console.log(platforms)
@@ -53,6 +53,15 @@ const movePlatforms = () => {
             platform.bottom -= .3
             let visual = platform.visual
             visual.style.bottom = platform.bottom + 'rem'
+
+            if(platform.bottom < .8){
+                let firstPlatform = platforms[0].visual
+                firstPlatform.classList.remove('platforms')
+                platforms.shift()
+                console.log(platforms)
+                let newPlatform = new Platform(57)
+                platforms.push(newPlatform)
+            }
         })
     }
 }
@@ -63,7 +72,7 @@ const jump = () => {
     upTimerId = setInterval(() => {
         doodlerBottomSpace += .8
         beardedDoodlerElement.style.bottom = doodlerBottomSpace + 'rem'
-        if(doodlerBottomSpace > startPoint + 30)
+        if(doodlerBottomSpace > startPoint + 25)
             fall()
     }, 30)
 }
@@ -91,24 +100,21 @@ const fall = () => {
     }, 30)
 }
 
-function gameOver(){
-    console.log('Game is Over')
-    isGameOver = true
-    clearInterval(upTimerId)
-    clearInterval(downTimerId)
-}
-
 const control = (e) => {
-    if(e.key === 'ArrowLeft'){
+    if(e.key === "ArrowLeft"){
         moveLeft()
     }else if(e.key === "ArrowRight"){
-        //moveRight
+        moveRight()
     }else if(e.key === "ArrowUp"){
-        //moveUp
+        moveStraight()
     }
 }
 
 const moveLeft = () => {
+    if(isGoingRight){
+        clearInterval(rightTimerId)
+        isGoingRight = false
+    }
     isGoingLeft = true
     leftTimerId = setInterval( function () {
         if(doodlerLeftSpace >= 0){
@@ -116,6 +122,36 @@ const moveLeft = () => {
             beardedDoodlerElement.style.left = doodlerLeftSpace + 'rem'
         }
     }, 30)
+}
+
+function moveRight() {
+    if(isGoingLeft){
+        clearInterval(leftTimerId)
+        isGoingLeft = false
+    }
+    isGoingRight = true
+    rightTimerId = setInterval(function() {
+        if(doodlerLeftSpace <= 39){
+            doodlerLeftSpace += .5
+            beardedDoodlerElement.style.left = doodlerLeftSpace + 'rem'
+        }
+    }, 30)
+}
+
+function moveStraight() {
+    isGoingLeft = false
+    isGoingRight = false
+    clearInterval(leftTimerId)
+    clearInterval(rightTimerId)
+}
+
+function gameOver(){
+    console.log('Game is Over')
+    isGameOver = true
+    clearInterval(upTimerId)
+    clearInterval(downTimerId)
+    clearInterval(leftTimerId)
+    clearInterval(rightTimerId)
 }
 
 const start = () => {
@@ -127,8 +163,6 @@ const start = () => {
         document.addEventListener('keyup', control)
     }
 }
-
-
 
 //attach it to a button
 start()
