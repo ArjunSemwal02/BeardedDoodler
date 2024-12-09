@@ -21,7 +21,7 @@ class Platform{
         this.bottom = newPlatformBottom
         this.left = Math.random() * 36
         this.visual = document.createElement('div')
-
+        
         const visual = this.visual
         visual.classList.add('platforms')
         visual.style.left = this.left + 'rem'
@@ -31,8 +31,8 @@ class Platform{
 }
 
 const createDoodler = () => {
-    beardedDoodlerElement.classList.add('doodler')
     gridElement.appendChild(beardedDoodlerElement)
+    beardedDoodlerElement.classList.add('doodler')
     doodlerLeftSpace = platforms[0].left
     beardedDoodlerElement.style.left = doodlerLeftSpace + 'rem'
     beardedDoodlerElement.style.bottom = doodlerBottomSpace + 'rem'

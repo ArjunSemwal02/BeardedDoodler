@@ -18,7 +18,10 @@ body{
     position: absolute;
     height: 8rem;
     width: 6rem;
-    background-color: red;
+    object-fit: cover;
+    /* background-color: red; */
+    background-image: url("./assets/man-152232.svg");
+    background-size: 9.9rem;
 }
 .platforms{
     width: 9rem;
